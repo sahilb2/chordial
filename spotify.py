@@ -5,6 +5,9 @@ import json
 from flask import request
 from auth import CLIENT_ID, CLIENT_SECRET
 
+import pprint
+pp = pprint.PrettyPrinter()
+
 
 PORT = 5000
 SCOPE = "user-library-read"
@@ -38,15 +41,8 @@ def user_Auth():
         "redirect_uri": REDIRECT_URI
     }
     base64encoded = base64.b64encode("{}:{}".format(CLIENT_ID, CLIENT_SECRET))
-
-
     hard_code = "ZTM5NDk0NzQxOGUxNDFkNGIwNTM2MDgzZDc4ZjhlZDY6MzI3NTNiMzNhNzY4NDgyMDkzNzA4YjYwMjQ3ZGM1YWY"
     headers = {"Authorization": "Basic {}".format(base64encoded)}
-
-    print(headers)
-    # print("000000000000000000000000000000000000000000000000000000000000000000000000")
-    #
-    # print(code_payload)
     post_request = requests.post(SPOTIFY_TOKEN_URL, data=code_payload, headers=headers)
 
     response_data = json.loads(post_request.text)
@@ -60,3 +56,11 @@ def Profile_Data(header):
     profile_response = requests.get(user_profile_api_endpoint, headers=header)
     profile_data = json.loads(profile_response.text)
     return profile_data
+
+def Playlist_Data(header):
+    playlist_api_endpoint = "{}/me/playlists".format(SPOTIFY_API_URL)
+    playlist_response = requests.get(playlist_api_endpoint, headers=header).text
+    pp.pprint(playlist_response)
+    playlist_data = json.loads(playlist_response)["items"];
+    #pp.pprint(playlist_data)
+    return playlist_data
