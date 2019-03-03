@@ -57,10 +57,17 @@ def Profile_Data(header):
     profile_data = json.loads(profile_response.text)
     return profile_data
 
-def Playlist_Data(header):
-    playlist_api_endpoint = "{}/me/playlists".format(SPOTIFY_API_URL)
+def Playlists_Data(header):
+    playlists_api_endpoint = "{}/me/playlists".format(SPOTIFY_API_URL)
+    playlists_response = requests.get(playlists_api_endpoint, headers=header).text
+    #pp.pprint(playlists_response)
+    playlists_data = json.loads(playlists_response)["items"]
+    #pp.pprint(playlist_data)
+    return playlists_data
+
+def Playlist_Data(header, id):
+    playlist_api_endpoint = "{}/playlists/{}".format(SPOTIFY_API_URL,id)
     playlist_response = requests.get(playlist_api_endpoint, headers=header).text
     pp.pprint(playlist_response)
-    playlist_data = json.loads(playlist_response)["items"];
-    #pp.pprint(playlist_data)
+    playlist_data = json.loads(playlist_response)
     return playlist_data
